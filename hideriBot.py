@@ -76,8 +76,8 @@ async def on_ready():
 async def on_message(message):
 
     # Ignore messages from the bot
-    if message.author == hideriBot.user:
-        return
+    """if message.author == hideriBot.user:
+        return"""
     
     # Convert Discord UTC timestamp to PST. Discord provides message timestamps in UTC so we take this to use later.
     utc_time = message.created_at
