@@ -41,7 +41,7 @@ instanceIP = None
 instanceZone = None
 instanceType = None
 
-        # Exception handler to get EC2 metadata and print that the EC2 data is available.
+        # Exception handler to get EC2 metadata and print to the terminal that the EC2 data is available.
 try:
     instanceID = ec2_metadata.instance_id
     instanceRegion = ec2_metadata.region
@@ -50,7 +50,7 @@ try:
     instanceType = ec2_metadata.instance_type
     print("EC2 Metadata is Available!")
 
-        # If the exception handler can't find any data, then use faux data and print that EC2 data is unavailable.
+        # If the exception handler can't find any data, then use faux data and print to the terminal that EC2 data is unavailable.
 except Exception:
     instanceID = "i-dsgc6f4g33ehwhl6p"
     instanceRegion = "ca-bc-south-202"
@@ -62,7 +62,7 @@ except Exception:
 
 
                                         # Event that runs when the program is run
-        # This prints to let us know that we logged into the bot account and sets a custom status.
+        # This prints to the terminal to let us know that we logged into the bot account and also sets a custom status.
 
 @hideriBot.event
 async def on_ready():
@@ -102,6 +102,7 @@ async def on_message(message):
                                         ### Commands ###
 
 # Restrict all the commands to only bot channels and direct messages using a function.
+# "ctx" in the following lines stands for context, which provides the information about users, messages, channels, servers, etc.
 def botChannel(ctx):
     return ctx.channel.type == discord.ChannelType.private or (isinstance(ctx.channel, discord.TextChannel) and ctx.channel.name.lower() == "bot")
 
@@ -118,6 +119,12 @@ async def hiCommand(ctx):
 @commands.check(botChannel)
 async def byeCommand(ctx):
     await ctx.reply(f"Bye {ctx.author.display_name}!")
+
+# Portal
+@hideriBot.command(name="portal") # Bye Command with Aliases
+@commands.check(botChannel)
+async def portalCommand(ctx):
+    await ctx.reply("[Click Here!](https://n1ji.github.io/portal/)")
 
 # Region
 @hideriBot.command(name="region")
@@ -158,8 +165,12 @@ hideriBot.remove_command("help")
 async def helpCommand(ctx):
     help_text = (
         "# __Here is a list of my commands:__\n"
+        "### __Misc Commands__\n"
         "**!hi**: Greets the user\n"
         "**!bye**: Says goodbye\n"
+        "**!portal: Link to my portal site for IT116**\n"
+        "\n"
+        "### __EC2 Commands__\n"
         "**!region**: Returns the Region of the EC2 Server\n"
         "**!ip**: Returns the Public IP of the EC2 Server\n"
         "**!zone**: Returns the Availability Zone of the EC2 Server\n"
@@ -168,9 +179,10 @@ async def helpCommand(ctx):
         )
     await ctx.reply(help_text)
 
-# Error handling for any channel we didn't specify above
+# Error handling for all commands
 @hiCommand.error
 @byeCommand.error
+@portalCommand.error
 @regionCommand.error
 @ipCommand.error
 @zoneCommand.error
@@ -178,12 +190,12 @@ async def helpCommand(ctx):
 @typeCommand.error
 @helpCommand.error
 
-# If the command is used in the wrong channel, then send the user a message letting them know they are in the wrong channel.
+# If one of the commands listed above is used in the wrong channel, then send the user a message letting them know they are in the wrong channel.
 async def command_error(ctx, error):
     if isinstance(error, commands.CheckFailure):
         await ctx.reply("This command can only be used in the #bot channel or in direct messages.")
     else:
-        # If the command doesn't exist, print the error message.
+        # If the command doesn't exist, print the "CommandNotFound" error message from discord's library.
         raise error
 
 # Run the bot
