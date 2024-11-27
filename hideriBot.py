@@ -67,10 +67,7 @@ except Exception:
 @hideriBot.event
 async def on_ready():
     print(f"Logged into bot: {hideriBot.user}")
-    await hideriBot.change_presence(
-        status=discord.Status.online,
-        activity=discord.CustomActivity('Type !help for commands.')
-    )
+    await hideriBot.change_presence(status=discord.Status.online, activity=discord.CustomActivity('Type !help for commands.'))
 
 
                                         # Event that is run every time a message is sent.
@@ -106,9 +103,7 @@ async def on_message(message):
 
 # Restrict all the commands to only bot channels and direct messages using a function.
 def botChannel(ctx):
-    return ctx.channel.type == discord.ChannelType.private or (
-        isinstance(ctx.channel, discord.TextChannel) and ctx.channel.name.lower() == "bot"
-    )
+    return ctx.channel.type == discord.ChannelType.private or (isinstance(ctx.channel, discord.TextChannel) and ctx.channel.name.lower() == "bot")
 
 # Every command runs the channel checker function before replying and then runs a function to reply to the user.
 
@@ -170,7 +165,7 @@ async def helpCommand(ctx):
         "**!zone**: Returns the Availability Zone of the EC2 Server\n"
         "**!id**: Returns the EC2 Instance ID\n"
         "**!type**: Returns the type of the Current Running Instance"
-    )
+        )
     await ctx.reply(help_text)
 
 # Error handling for any channel we didn't specify above
