@@ -67,18 +67,25 @@ async def on_message(message):
         # User commands
         if userMessage.lower() in ["hi", "hello", "hola", "こんにちは"]:
             await message.reply(f'Hello {dispName}!')
+
         elif userMessage.lower() == "bye":
             await message.reply(f'Bye {dispName}!')
+
         elif userMessage.lower() == "region":
             await message.reply(f'Here is the EC2 Instance Region: {instanceRegion}')
+
         elif userMessage.lower() == "ip":
             await message.reply(f'Here is the public EC2 Instance IP: {instanceIP}')
+
         elif userMessage.lower() == "zone":
             await message.reply(f'Here is the EC2 Instance Availability Zone: {instanceZone}')
+
         elif userMessage.lower() == "id":
             await message.reply(f'Here is the EC2 Instance ID: {instanceID}')
+
         elif userMessage.lower() == "type":
             await message.reply(f'Here is the type of Instance Currently Running: {instanceType}')
+            
         elif userMessage.lower() == "help":
             await message.reply(
                 "# __Here is a list of my commands:__\n"
