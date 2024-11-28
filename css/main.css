@@ -38,6 +38,9 @@ p.bio {
     margin: 1em;
     font-size: 1em;
     line-height: 1.5em;
+    padding-left: 5%;
+    padding-right: 5%;
+    text-align: center;
     color:#E7DFC6;
 }
 
@@ -46,12 +49,6 @@ p.origin {
     font-size: 1em;
     font-size: .96em;
     color:#E7DFC6;
-}
-
-p.bio {
-    padding-left: 3%;
-    padding-right: 3%;
-    text-align: center;
 }
 
 h2 {
