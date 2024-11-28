@@ -25,3 +25,10 @@ function myFunction() {
         x.className = "topnav";
     }
 }   
+
+document.querySelectorAll('.image-container img').forEach(img => {
+    img.addEventListener('click', () => {
+        // Open the full-size image in a new tab
+        window.open(img.src, '_blank');
+    });
+});

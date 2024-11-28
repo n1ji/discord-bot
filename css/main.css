@@ -31,6 +31,7 @@ h1 {
 main.wrapper {
     background-color: #1b1518;
     overflow: auto;
+    text-align: center;
 }
 
 p.bio {
@@ -68,6 +69,69 @@ h3 {
     font-size: 1.2em;
     color:#e6e3dc
 
+}
+
+.outer-container {
+    display: flex;
+    flex-direction: column; /* Align the hint and image container vertically */
+    align-items: center;
+}
+
+.image-hint {
+    font-size: 1rem;
+    color:#E7DFC6;
+    margin-bottom: 10px;
+    text-align: center;
+    padding-bottom: 1%;
+}
+
+.image-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: center; /* Center the images */
+    gap: 30px; /* Increased space between images for visual clarity */
+    max-width: 1600px; /* Expanded container width for larger images */
+    padding: 20px;
+    border: 2px solid #AD343E;
+}
+
+.image-container figure {
+    margin: 0; /* Remove default figure margin */
+    width: calc(33.33% - 30px); /* Each image spans one-third of the row minus the gap */
+}
+
+.image-container img {
+    display: block;
+    width: 100%; /* Make the image fill the figure width */
+    height: auto; /* Maintain aspect ratio */
+    border: 2px dashed #AD343E;
+    cursor: pointer; /* Indicate interactivity */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth effect */
+}
+
+.image-container img:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Add shadow effect */
+}
+
+figcaption {
+    font-size: 1rem;
+    color: #E7DFC6; /* Light color for the caption text */
+    margin-top: 10px;
+    font-style: italic; /* Optional: style for caption text */
+}
+
+/* Responsive Design */
+@media all and (max-width: 1200px) {
+    .image-container figure {
+        width: calc(50% - 30px); /* Two images per row on medium screens */
+    }
+}
+
+@media all and (max-width: 600px) {
+    .image-container figure {
+        width: 100%; /* One image per row on small screens */
+    }
 }
 
 a {
