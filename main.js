@@ -1,12 +1,3 @@
-function elementToggle() {
-    var x = document.getElementById("games");
-    if (x.style.display === "none") {
-      x.style.display = "flex";
-    } else {
-      x.style.display = "none";
-    }
-  } 
-
 //https://tinyurl.com/dynamic-html-css-checkers
 document.getElementById("html-checker").setAttribute("href","https://validator.w3.org/nu/?doc=" + location.href);
 
