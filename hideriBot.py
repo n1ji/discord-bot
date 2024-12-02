@@ -6,13 +6,14 @@
 # commands from discord.ext which allows us to use the bot with a command prefix.
 # pytz converts time
 # datetime to get the time
+# random to generate random numbers and sequences
+# string provides string constants
 
-import os
-import discord
+import os, discord, pytz, random, string
+
 from ec2_metadata import ec2_metadata
 from dotenv import load_dotenv
 from discord.ext import commands
-import pytz
 from datetime import datetime
 
 # Load the .env file
@@ -29,19 +30,18 @@ intents.message_content = True
 #This tells the bot to look for ! when we want to invoke a command.
 hideriBot = commands.Bot(command_prefix="!", intents=intents)
 
-
-
                                         #EC2 Things
 
-        # Declare EC2 metadata variables as none, otherwise the program will not run.
-        # If you set these variables = ec2_metadata.* they will try to pull data that doesn't exist when you run this program outside of EC2.
+        # If you set these variables = "ec2_metadata.*", they will try to pull data that doesn't exist when you run this program outside of EC2, or if the data is unavailable.
+        # To fix the issue, we declare EC2 metadata variables as None and use an exception handler to change them later.
 instanceID = None
 instanceRegion = None
 instanceIP = None
 instanceZone = None
 instanceType = None
 
-        # Exception handler to get EC2 metadata and print to the terminal that the EC2 data is available.
+        # Exception handler to attempt to retrieve EC2 metadata
+        # If it succeeds, it prints to the terminal that the EC2 data is available and repopulates the variables using the data from EC2.
 try:
     instanceID = ec2_metadata.instance_id
     instanceRegion = ec2_metadata.region
@@ -50,13 +50,13 @@ try:
     instanceType = ec2_metadata.instance_type
     print("EC2 Metadata is Available!")
 
-        # If the exception handler can't find any data, then use faux data and print to the terminal that EC2 data is unavailable.
+        # If an exception occurs, we print that the data is unavailable and populate the data with faux data.
 except Exception:
-    instanceID = "i-dsgc6f4g33ehwhl6p"
-    instanceRegion = "ca-bc-south-202"
-    instanceIP = "52.142.124.215"
-    instanceZone = "ca-bc-northwest-7c"
-    instanceType = "Python Instance"
+    instanceID = None # Set to none and redefined later every time the command is run.
+    instanceRegion = "ca-bc-south-202" # Fake Region
+    instanceIP = None # Set to none and redefined later every time the command is run.
+    instanceZone = "ca-bc-northwest-7c" # Fake Zone
+    instanceType = "Local Instance"
     print("EC2 metadata is unavailable.")
 
 
@@ -91,13 +91,11 @@ async def on_message(message):
     # Format the timestamp to the best format AKA day, month, year.
     timestamp = local_time.strftime('%d-%m-%Y %H:%M:%S')
     
-    # Print every message the bot reads including the user that sent it and the time it was sent.
+    # Print every message the bot reads including the user that sent it, and the time it was sent.
     print(f'Message in {message.channel} from {message.author}: "{message.content}" @ [{timestamp}]')
 
     # This has to be added for ! prefix commands to continue working outside the event
     await hideriBot.process_commands(message)
-
-
 
                                         ### Commands ###
 
@@ -121,7 +119,7 @@ async def byeCommand(ctx):
     await ctx.reply(f"Bye {ctx.author.display_name}!")
 
 # Portal
-@hideriBot.command(name="portal") # Bye Command with Aliases
+@hideriBot.command(name="portal")
 @commands.check(botChannel)
 async def portalCommand(ctx):
     await ctx.reply("[Click Here!](https://n1ji.github.io/portal/)")
@@ -136,7 +134,8 @@ async def regionCommand(ctx):
 @hideriBot.command(name="ip")
 @commands.check(botChannel)
 async def ipCommand(ctx):
-    await ctx.reply(f"Here is the public EC2 Instance IP: {instanceIP}")
+    useIP = instanceIP if instanceIP else ".".join(str(random.randint(0, 255)) for _ in range(4)) # This commands will use EC2 data if it is obtainable, otherwise it generates a random IP formatted as IPv4
+    await ctx.reply(f"Here is the public EC2 Instance IP: {useIP}")
 
 # Zone
 @hideriBot.command(name="zone")
@@ -148,7 +147,8 @@ async def zoneCommand(ctx):
 @hideriBot.command(name="id")
 @commands.check(botChannel)
 async def idCommand(ctx):
-    await ctx.reply(f"Here is the EC2 Instance ID: {instanceID}")
+    useID = instanceID if instanceID else (f"i-0{''.join(random.sample(string.ascii_lowercase+string.digits, 16))}") # Uses EC2 if available, otherwise this generates a random instance ID starting with the default EC2 instance string, i-0 followed by 16 randomly generated lowercase letters and numbers.
+    await ctx.reply(f"Here is the EC2 Instance ID: {useID}")
 
 # Type
 @hideriBot.command(name="type")
