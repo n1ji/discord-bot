@@ -5,7 +5,7 @@ import discord
 from ec2_metadata import ec2_metadata
 
 # Load the .env file
-load_dotenv('env.env')
+load_dotenv('.env')
 
 #Get the token from the environment variable
 token = os.getenv('TOKEN')
@@ -21,6 +21,7 @@ intents.message_content = True
 
 client = discord.Bot(intents=intents)
 
+#Exception Handling
 instanceID = None
 instanceRegion = None
 instanceIP = None
@@ -35,6 +36,7 @@ try:
     instanceType = ec2_metadata.instance_type
 
     print("EC2 Metadata is Available!")
+
 except Exception as e:
     # Print to the terminal if EC2 is not running and use mock data instead.
     print(f"EC2 metadata is unavailable.\n")
@@ -50,6 +52,7 @@ async def on_ready():
     print(f"Logged into bot: {client.user}")
     await client.change_presence(status=discord.Status.online, activity=discord.CustomActivity('Type help for a list of commands.'))
 
+#Run whenever the bot detects a message
 @client.event
 async def on_message(message):
     # Ignore messages from the bot
@@ -64,7 +67,7 @@ async def on_message(message):
     if isinstance(message.channel, discord.DMChannel) or (isinstance(message.channel, discord.TextChannel) and message.channel.name == "bot"):
         print(f'Message in {message.channel} from {username}: {message.content}')
 
-        # User commands
+        # User commands using if else statements
         if userMessage.lower() in ["hi", "hello", "hola", "こんにちは"]:
             await message.reply(f'Hello {dispName}!')
 
@@ -97,6 +100,8 @@ async def on_message(message):
             )
         else:
             await message.reply("I didn't understand that command. Type **help** for a list of my commands.")
+
+    #Print a message to the terminal if the user types in the wrong channel
     else:
         print(f"Ignored message in {message.channel} from {username}: {message.content}")
 
