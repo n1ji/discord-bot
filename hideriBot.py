@@ -9,7 +9,7 @@
 # random to generate random numbers and sequences
 # string provides string constants
 
-import os, discord, pytz, random, string
+import os, discord, pytz, random, string, logging, logging.handlers
 
 from ec2_metadata import ec2_metadata
 from dotenv import load_dotenv
@@ -26,6 +26,8 @@ token = os.getenv('TOKEN')
 intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
+
+logging.basicConfig(filename='discord.log', encoding='utf-8', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 #This tells the bot to look for ! when we want to invoke a command.
 hideriBot = commands.Bot(command_prefix="!", intents=intents)
@@ -94,6 +96,9 @@ async def on_message(message):
     # Print every message the bot reads including the user that sent it, and the time it was sent.
     print(f'Message in {message.channel} from {message.author}: "{message.content}" @ [{timestamp}]')
 
+    # Log all messages to a log file.
+    logging.info(f'Message in {message.channel} from {message.author}: "{message.content}"')
+
     # This has to be added for ! prefix commands to continue working outside the event
     await hideriBot.process_commands(message)
 
@@ -150,6 +155,12 @@ async def idCommand(ctx):
     useID = instanceID if instanceID else (f"i-0{''.join(random.sample(string.ascii_lowercase+string.digits, 16))}") # Uses EC2 if available, otherwise this generates a random instance ID starting with the default EC2 instance string, i-0 followed by 16 randomly generated lowercase letters and numbers.
     await ctx.reply(f"Here is the EC2 Instance ID: {useID}")
 
+# D20 Dice
+@hideriBot.command(name="rtd")
+@commands.check(botChannel)
+async def typeCommand(ctx):
+    await ctx.reply(f"You rolled a {random.randint(1,20)}")
+
 # Type
 @hideriBot.command(name="type")
 @commands.check(botChannel)
@@ -169,6 +180,7 @@ async def helpCommand(ctx):
         "**!hi**: Greets the user\n"
         "**!bye**: Says goodbye\n"
         "**!portal: Link to my portal site for IT116**\n"
+        "**!rtd: Roll a D20 Die**\n"
         "\n"
         "### __EC2 Commands__\n"
         "**!region**: Returns the Region of the EC2 Server\n"
