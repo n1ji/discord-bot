@@ -123,11 +123,11 @@ async def hiCommand(ctx):
 async def byeCommand(ctx):
     await ctx.reply(f"Bye {ctx.author.display_name}!")
 
-# Portal
-@hideriBot.command(name="portal")
+# My Site
+@hideriBot.command(name="site")
 @commands.check(botChannel)
 async def portalCommand(ctx):
-    await ctx.reply("[Click Here!](https://n1ji.github.io/portal/)")
+    await ctx.reply("[Click Here!](https://n1ji.xyz)")
 
 # Region
 @hideriBot.command(name="region")
@@ -179,7 +179,7 @@ async def helpCommand(ctx):
         "### __Misc Commands__\n"
         "**!hi**: Greets the user\n"
         "**!bye**: Says goodbye\n"
-        "**!portal: Link to my portal site for IT116**\n"
+        "**!site: Link to my portfolio site**\n"
         "**!rtd: Roll a D20 Die**\n"
         "\n"
         "### __EC2 Commands__\n"
